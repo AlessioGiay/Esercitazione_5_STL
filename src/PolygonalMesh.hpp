@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <iostream>
@@ -27,6 +26,8 @@ struct PolygonalMesh
 	vector<unsigned int> Cell2DsMarker = {};
 	vector<vector<unsigned int>> Cell2DsVertices = {}; // Uso vector perchè non conosco la dimensione dei poligoni
 	vector<vector<unsigned int>> Cell2DsEdges = {}; // Uguale
+	
+	MatrixXd Points;
 };
 
 }

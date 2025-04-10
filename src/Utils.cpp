@@ -1,10 +1,10 @@
 #include "Utils.hpp"
-#include <iostream>
 #include <fstream>
 #include <sstream>
-#include <cerrno>
-#include <cstring>
 #include <cmath>
+#include <limits>
+//#include <cerrno>
+//#include <cstring>
 
 using namespace std;
 
@@ -181,6 +181,8 @@ bool ImportCell2Ds(const string& path, PolygonalMesh& mesh)
 // ***************************************************************************
 bool CheckLength(PolygonalMesh& mesh)
 {
+	const double epsilon = std::numeric_limits<double>::epsilon();
+	
 	for(size_t i = 0; i < mesh.Cell1DsID.size(); i++)
 	{
 		double length = EdgeLength(
@@ -188,7 +190,37 @@ bool CheckLength(PolygonalMesh& mesh)
 		mesh.Cell0DsCoordinates[mesh.Cell1DsVertices[i][0]](1), // Prendo la y del primo vertice
 		mesh.Cell0DsCoordinates[mesh.Cell1DsVertices[i][1]](0), // Prendo la x del secondo vertice
 		mesh.Cell0DsCoordinates[mesh.Cell1DsVertices[i][1]](1)); // Prendo la y del secondo vertice
+		
+		if (length < sqrt((4*epsilon)/sqrt(3)))
+		// L'area del poligono più piccolo è un triangolo equilatero di lato L, ε < A = L^2*sqrt(3)/4, => L > sqrt((4*epsilon)/sqrt(3))
+		{
+			cout << "La lato: " << i << " ha lunghezza non valida\n";
+			return false;
+		}
 	}
+	
+	return true;
+}
+// ***************************************************************************
+bool CheckAreas(PolygonalMesh& mesh)
+{
+	
+	
+	return true;
+}
+// ***************************************************************************
+bool ExpPoints(PolygonalMesh& mesh, const string& C0Path)
+{
+	mesh.Points.resize(3, mesh.NumCell0Ds);
+	for(size_t i = 0; i < mesh.NumCell0Ds; i++)
+	{
+		mesh.Points(0,i) = mesh.Cell0DsCoordinates[i][0];
+		mesh.Points(1,i) = mesh.Cell0DsCoordinates[i][1];
+		mesh.Points(2,i) = 0.0;
+	}
+	
+	Gedim::UCDUtilities utilities;
+	utilities.ExportPoints(C0Path, mesh.Points);
 	
 	return true;
 }

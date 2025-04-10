@@ -1,7 +1,7 @@
 #pragma once
 
-#include <iostream>
 #include "PolygonalMesh.hpp"
+#include "UCDUtilities.hpp"
 
 using namespace std;
 
@@ -16,4 +16,8 @@ bool ImportCell1Ds(const string& path, PolygonalMesh& mesh);
 bool ImportCell2Ds(const string& path, PolygonalMesh& mesh);
 
 bool CheckLength(PolygonalMesh& mesh);
+
+bool CheckAreas(PolygonalMesh& mesh);
+
+bool ExpPoints(PolygonalMesh& mesh, const string& C0Path);
 }
