@@ -17,6 +17,11 @@ int main()
         return 1;
     }
     
+    if(!CheckLength(mesh))
+    {
+	    return 1;
+	}
+
     //Gedim::UCDUtilities utilities;
     //utilities.ExportPonits("./Cell0Ds.inp", mesh.Cell0DsVertices
 

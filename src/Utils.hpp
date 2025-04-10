@@ -15,4 +15,5 @@ bool ImportCell1Ds(const string& path, PolygonalMesh& mesh);
 
 bool ImportCell2Ds(const string& path, PolygonalMesh& mesh);
 
+bool CheckLength(PolygonalMesh& mesh);
 }
