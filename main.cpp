@@ -8,7 +8,7 @@ int main()
 {
 	PolygonalMesh mesh;
 	string path = "/home/appuser/Data/Esercitazione_5_STL/PolygonalMesh";
-	string FilePath = "/home/appuser/Data/Esercitazione_5_STL/Miei/Cells.csv";
+	string FilePath = "/home/appuser/Data/Esercitazione_5_STL/Miei/Cells.txt";
 
 	if(!ImportMesh(path, mesh))
 	{
