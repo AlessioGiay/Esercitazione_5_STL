@@ -28,6 +28,9 @@ struct PolygonalMesh
 	vector<vector<unsigned int>> Cell2DsEdges = {}; // Uguale
 	
 	MatrixXd Points;
+	MatrixXi Segments;
+	
+	const double epsilon = numeric_limits<double>::epsilon();
 };
 
 }

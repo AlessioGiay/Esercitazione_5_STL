@@ -2,7 +2,6 @@
 #include <fstream>
 #include <sstream>
 #include <cmath>
-#include <limits>
 //#include <cerrno>
 //#include <cstring>
 
@@ -17,6 +16,8 @@ namespace PolygonalLibrary
 {
 bool ImportMesh(const string& path, PolygonalMesh& mesh)
 {
+	cout << "Si IM\n";
+	
 	if(!ImportCell0Ds(path, mesh)) //prova ad importare il file Cell0d.csv
     {
         cerr << "File Cell0Ds.csv not found" << endl;
@@ -41,6 +42,8 @@ bool ImportMesh(const string& path, PolygonalMesh& mesh)
 // ***************************************************************************
 bool ImportCell0Ds(const string& path, PolygonalMesh& mesh)
 {
+	cout << "Si IC0\n";
+	
 	string filePath = path + "/Cell0Ds.csv";
 	ifstream file0(filePath);
 
@@ -82,6 +85,8 @@ bool ImportCell0Ds(const string& path, PolygonalMesh& mesh)
 // ***************************************************************************
 bool ImportCell1Ds(const string& path, PolygonalMesh& mesh)
 {
+	cout << "Si IC1\n";
+	
 	string filePath = path + "/Cell1Ds.csv";
 	ifstream file1(filePath);
 
@@ -123,6 +128,8 @@ bool ImportCell1Ds(const string& path, PolygonalMesh& mesh)
 // ***************************************************************************
 bool ImportCell2Ds(const string& path, PolygonalMesh& mesh)
 {
+	cout << "Si IC2\n";
+	
 	string filePath = path + "/Cell2Ds.csv";
 	ifstream file2(filePath);
 
@@ -181,7 +188,7 @@ bool ImportCell2Ds(const string& path, PolygonalMesh& mesh)
 // ***************************************************************************
 bool CheckLength(PolygonalMesh& mesh)
 {
-	const double epsilon = std::numeric_limits<double>::epsilon();
+	cout << "Si CL\n";
 	
 	for(size_t i = 0; i < mesh.Cell1DsID.size(); i++)
 	{
@@ -191,10 +198,11 @@ bool CheckLength(PolygonalMesh& mesh)
 		mesh.Cell0DsCoordinates[mesh.Cell1DsVertices[i][1]](0), // Prendo la x del secondo vertice
 		mesh.Cell0DsCoordinates[mesh.Cell1DsVertices[i][1]](1)); // Prendo la y del secondo vertice
 		
-		if (length < sqrt((4*epsilon)/sqrt(3)))
+		//if (length < sqrt((4*epsilon)/sqrt(3)))
 		// L'area del poligono più piccolo è un triangolo equilatero di lato L, ε < A = L^2*sqrt(3)/4, => L > sqrt((4*epsilon)/sqrt(3))
+		if(length < mesh.epsilon)
 		{
-			cout << "La lato: " << i << " ha lunghezza non valida\n";
+			cout << "Il lato: " << i << " ha lunghezza non valida\n";
 			return false;
 		}
 	}
@@ -204,13 +212,123 @@ bool CheckLength(PolygonalMesh& mesh)
 // ***************************************************************************
 bool CheckAreas(PolygonalMesh& mesh)
 {
+	cout << "Si CA\n";
 	
-	
+	double x1;
+	double x2;
+	double y1;
+	double y2;
+	for (unsigned int i = 0; i < mesh.NumCell2Ds; i++)
+	{
+		vector<unsigned int> Edges = mesh.Cell2DsEdges[i]; // Crea un vettore con i lati della riga i di Cell2DsEdges
+		double Area = 0.0;
+		for (unsigned int j = 0; j < Edges.size(); j++)
+		{
+			//cout << "Lato: " << Edges[j] << endl;
+			const unsigned int Vertex1 = mesh.Cell1DsVertices[Edges[j]][0];
+			const unsigned int Vertex2 = mesh.Cell1DsVertices[Edges[j]][1];
+			//cout << "Vertice 1: " << Vertex1 << ", Vertice 2: " << Vertex2 << endl;
+			x1 = mesh.Cell0DsCoordinates[Vertex1](0);
+			y1 = mesh.Cell0DsCoordinates[Vertex1](1);
+			x2 = mesh.Cell0DsCoordinates[Vertex2](0);
+			y2 = mesh.Cell0DsCoordinates[Vertex2](1);
+			//cout <<"Punto 1: " << x1 << "," << y1 << ", Punto 2: " << x2 << "," << y2 << endl;
+			Area = Area + (x1*y2 - y1*x2); // Formula per calcolare l'area: 1/2 * abs(sum( x(i)*y(i+1) - x(i+1)*y(i) ))	
+		}
+		Area = 0.5*abs(Area);
+		//cout << "\nArea : " << Area << endl;
+		if (Area < mesh.epsilon)
+		{ 
+			cout << "Il poligono: " << i << " ha area nulla" << endl;
+		
+			return false;
+		}
+		//cout << endl;
+	}
 	return true;
 }
 // ***************************************************************************
-bool ExpPoints(PolygonalMesh& mesh, const string& C0Path)
+bool CheckMarker0Ds(PolygonalMesh& mesh)
 {
+	cout << "Si CM0\n";
+	
+	double x;
+	double y;
+	
+	for(const auto& i : mesh.Cell0DsID)
+	{
+		x = mesh.Cell0DsCoordinates[i](0);
+		y = mesh.Cell0DsCoordinates[i](1);
+		if(mesh.Cell0DsMarker[i] == 0)
+		{
+			if( abs(x-1.0) < mesh.epsilon || abs(y-1.0) < mesh.epsilon ||
+				x < mesh.epsilon || y < mesh.epsilon)
+			{
+				cout << "Condizione non soddisfatta per i=" << i << endl;
+				return false;
+			}
+		}
+		else
+		{
+			if( !(abs(x-1.0) < mesh.epsilon || abs(y-1.0) < mesh.epsilon ||
+				x < mesh.epsilon || y < mesh.epsilon))
+			{
+				cout << "Condizione non soddisfatta per i=" << i << endl;
+				return false;
+			}
+		}
+	}
+	return true;
+}
+// ***************************************************************************
+bool CheckMarker1Ds(PolygonalMesh& mesh)
+{
+	cout << "Si CM1\n";
+	
+	unsigned int count = 0;
+	
+	for(const auto& i : mesh.Cell1DsVertices)
+	{
+		vector<double> x;
+		vector<double> y;
+		
+		for(const auto& j : i)
+		{
+			x.push_back(mesh.Cell0DsCoordinates[j](0));
+			y.push_back(mesh.Cell0DsCoordinates[j](1));
+		}
+			
+		if(mesh.Cell1DsMarker[count] == 0)
+		{
+			if( (abs(x[0]-1.0) < mesh.epsilon || abs(y[0]-1.0) < mesh.epsilon || x[0] < mesh.epsilon || y[0] < mesh.epsilon) 
+				&& 
+				(abs(x[1]-1.0) < mesh.epsilon || abs(y[1]-1.0) < mesh.epsilon || x[1] < mesh.epsilon || y[1] < mesh.epsilon) )
+			{
+				cout << "Condizione non soddisfatta per i=" << count << endl;
+				return false;
+			}
+		}
+		else
+		{
+			if( !((abs(x[0]-1.0) < mesh.epsilon || abs(y[0]-1.0) < mesh.epsilon || x[0] < mesh.epsilon || y[0] < mesh.epsilon) 
+				|| 
+				!(abs(x[1]-1.0) < mesh.epsilon || abs(y[1]-1.0) < mesh.epsilon || x[1] < mesh.epsilon || y[1] < mesh.epsilon)))
+			{
+				cout << "Condizione non soddisfatta per i=" << count << endl;
+				return false;
+			}
+		}
+		
+		count ++;
+	}
+	return true;
+}
+// ***************************************************************************
+bool ExpPoints(PolygonalMesh& mesh, const string& FilePath)
+{
+	cout << "Si ExPo\n";
+	
+	//unsigned int count = 0;
 	mesh.Points.resize(3, mesh.NumCell0Ds);
 	for(size_t i = 0; i < mesh.NumCell0Ds; i++)
 	{
@@ -219,9 +337,75 @@ bool ExpPoints(PolygonalMesh& mesh, const string& C0Path)
 		mesh.Points(2,i) = 0.0;
 	}
 	
+	VectorXi Materials0Ds(mesh.Cell0DsMarker.size());
+	for (std::size_t i = 0; i < mesh.Cell0DsMarker.size(); ++i)
+	{
+		Materials0Ds[i] = static_cast<int>(mesh.Cell0DsMarker[i]);
+		//cout << "Marker: " << Materials0Ds[i] << endl;
+		//if(Materials0Ds[i] > 0)
+		//{
+		//	count ++;
+		//}
+	}
+	//cout << "Marker maggiori di zero: " << count << endl;
 	Gedim::UCDUtilities utilities;
-	utilities.ExportPoints(C0Path, mesh.Points);
+	utilities.ExportPoints(FilePath, mesh.Points, {}, Materials0Ds);
 	
+	return true;
+}
+// ***************************************************************************
+bool ExpSegments(PolygonalMesh& mesh, const string& FilePath)
+{
+	cout << "Si ExS\n";
+	
+	//unsigned int count = 0;
+	mesh.Segments.resize(2, mesh.NumCell1Ds);
+	for(size_t i = 0; i < mesh.NumCell1Ds; i++)
+	{
+		mesh.Segments(0,i) = mesh.Cell1DsVertices[i][0];
+		mesh.Segments(1,i) = mesh.Cell1DsVertices[i][1];
+		//cout << mesh.Segments(0,i) << " " << mesh.Segments(1,i) << endl;
+	}
+	
+	VectorXi Materials1Ds(mesh.Cell1DsMarker.size());
+	for (std::size_t i = 0; i < mesh.Cell1DsMarker.size(); ++i)
+	{
+		Materials1Ds[i] = static_cast<int>(mesh.Cell1DsMarker[i]);
+		//cout << "Marker: " << Materials1Ds[i] << endl;
+		//if(Materials1Ds[i] > 0)
+		//{
+		//	count ++;
+		//}
+	}
+	//cout << "Marker maggiori di zero: " << count << endl;
+	
+	Gedim::UCDUtilities utilities;
+	utilities.ExportSegments(FilePath, mesh.Points, mesh.Segments, {}, {}, Materials1Ds);
+	
+	return true;
+}
+// ***************************************************************************
+bool ExpPolygons(PolygonalMesh& mesh, const string& FilePath)
+{
+	cout << "Si ExP\n";
+	
+	//Gedim::UCDUtilities utilities;
+	//utilities.ExportPolygons(C0Path, mesh.Points, mesh.Cell2DsVertices);
+	unsigned int count = 0;
+	unsigned int count2 = 0;
+	
+	for (size_t i = 0; i < mesh.NumCell2Ds; ++i)
+		{
+		if(mesh.Cell2DsVertices[i].size() > count)
+		{
+			count = mesh.Cell2DsVertices[i].size();
+			count2 = i;
+		}
+		//cout << "Poligono " << i << ": " << mesh.Cell2DsVertices[i].size() << " vertici\n";
+	}
+	
+	//cout << "Il numero massimo di vertici è " << count << endl;
+	//cout << "Il poligono è il numero " << count2 << endl;
 	return true;
 }
 }

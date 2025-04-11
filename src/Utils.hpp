@@ -2,6 +2,7 @@
 
 #include "PolygonalMesh.hpp"
 #include "UCDUtilities.hpp"
+#include <limits>
 
 using namespace std;
 
@@ -19,5 +20,14 @@ bool CheckLength(PolygonalMesh& mesh);
 
 bool CheckAreas(PolygonalMesh& mesh);
 
-bool ExpPoints(PolygonalMesh& mesh, const string& C0Path);
+bool CheckMarker0Ds(PolygonalMesh& mesh);
+
+bool CheckMarker1Ds(PolygonalMesh& mesh);
+
+bool ExpPoints(PolygonalMesh& mesh, const string& FilePath);
+
+bool ExpSegments(PolygonalMesh& mesh, const string& FilePath);
+
+bool ExpPolygons(PolygonalMesh& mesh, const string& FilePath);
+
 }
