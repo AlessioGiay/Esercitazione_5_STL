@@ -96,7 +96,7 @@ private:
                         const std::vector<UCDProperty<double>>& point_properties,
                         const std::vector<UCDCell>& cells,
                         const std::vector<UCDProperty<double>>& cell_properties,
-                        const std::string& filePath) const;
+                        const std::string& file dPath) const;
 
 public:
     UCDUtilities() { }
