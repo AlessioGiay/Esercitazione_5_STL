@@ -236,37 +236,25 @@ void UCDUtilities::ExportUCDAscii(const Eigen::MatrixXd& points,
     file<< 0<< std::endl; // model not supported
 
     // export points
-    // AGGIUNTA INTESTAZIONE
-    file << "ID\tx\t\t\ty\t\t\tz\n";
     for (unsigned int p = 0; p < points.cols(); p++)
     {
 	    // MODIFICATO sep CON "\t"
-        file<< (p + 1) << "\t";
-        file<< std::scientific<< points(0, p)<< "\t";
-        file<< std::scientific<< points(1, p)<< "\t";
+        file<< (p + 1) <<sep;
+        file<< std::scientific<< points(0, p)<< sep;
+        file<< std::scientific<< points(1, p)<< sep;
         file<< std::scientific<< points(2, p)<< std::endl;
     }
 
     // export cells
-    // AGGIUNTA INTESTAZIONE 
-    file << "\nID\tMarker\t\tLato 1\tLato 2\n";
     for (unsigned int c = 0; c < cells.size(); c++)
     {
 	    // MODIFICATO sep CON "\t"
-        file<< (c + 1) << "\t";
-        // AGGIUNTA PARENTESI QUADRE AI LATI SUL BORDO
-        if(cells[c].MaterialId != 0)
-        {
-        	file<< std::scientific<< "[" << cells[c].MaterialId << "]"<< "\t";
-        }
-        else
-        {
-	        file<< std::scientific<< cells[c].MaterialId<< "\t";
-        }
+        file<< (c + 1) << sep;
+        file<< std::scientific<< cells[c].MaterialId<< sep;
         file<< std::scientific<< cells[c].CellLabel(cells[c].Type);
         for (unsigned int p = 0; p < cells[c].PointIds.size(); p++)
         {
-            file<< "\t"<< (cells[c].PointIds[p] + 1);
+            file<< sep<< (cells[c].PointIds[p] + 1);
         }
         file<< std::endl;
     }

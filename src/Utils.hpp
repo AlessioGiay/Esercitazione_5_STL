@@ -28,6 +28,4 @@ bool ExpPoints(PolygonalMesh& mesh, const string& FilePath);
 
 bool ExpSegments(PolygonalMesh& mesh, const string& FilePath);
 
-bool ExpPolygons(PolygonalMesh& mesh, const string& FilePath);
-
 }

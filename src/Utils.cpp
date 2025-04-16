@@ -326,7 +326,7 @@ bool CheckMarker1Ds(PolygonalMesh& mesh)
 // ***************************************************************************
 bool ExpPoints(PolygonalMesh& mesh, const string& FilePath)
 {
-	cout << "Si ExPo\n";
+	cout << "Si ExP\n";
 	
 	//unsigned int count = 0;
 	mesh.Points.resize(3, mesh.NumCell0Ds);
@@ -382,30 +382,6 @@ bool ExpSegments(PolygonalMesh& mesh, const string& FilePath)
 	Gedim::UCDUtilities utilities;
 	utilities.ExportSegments(FilePath, mesh.Points, mesh.Segments, {}, {}, Materials1Ds);
 	
-	return true;
-}
-// ***************************************************************************
-bool ExpPolygons(PolygonalMesh& mesh, const string& FilePath)
-{
-	cout << "Si ExP\n";
-	
-	//Gedim::UCDUtilities utilities;
-	//utilities.ExportPolygons(C0Path, mesh.Points, mesh.Cell2DsVertices);
-	unsigned int count = 0;
-	unsigned int count2 = 0;
-	
-	for (size_t i = 0; i < mesh.NumCell2Ds; ++i)
-		{
-		if(mesh.Cell2DsVertices[i].size() > count)
-		{
-			count = mesh.Cell2DsVertices[i].size();
-			count2 = i;
-		}
-		//cout << "Poligono " << i << ": " << mesh.Cell2DsVertices[i].size() << " vertici\n";
-	}
-	
-	//cout << "Il numero massimo di vertici è " << count << endl;
-	//cout << "Il poligono è il numero " << count2 << endl;
 	return true;
 }
 }

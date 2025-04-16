@@ -8,7 +8,10 @@ int main()
 {
 	PolygonalMesh mesh;
 	string path = "/home/appuser/Data/Esercitazione_5_STL/PolygonalMesh";
-	string FilePath = "/home/appuser/Data/Esercitazione_5_STL/Miei/Cells.txt";
+	string File_1_Path = "/home/appuser/Data/Esercitazione_5_STL/MioExport/Cell0Ds.inp";
+	string File_2_Path = "/home/appuser/Data/Esercitazione_5_STL/MioExport/Cell1Ds.inp";
+	string File_8_Path = "/home/appuser/Data/Esercitazione_5_STL/MioExport/Cell0Ds.txt";
+	string File_9_Path = "/home/appuser/Data/Esercitazione_5_STL/MioExport/Cell1Ds.txt";
 
 	if(!ImportMesh(path, mesh))
 	{
@@ -35,20 +38,24 @@ int main()
 		return 1;
 	}
 	
-	if(!ExpPoints(mesh, FilePath))
+	if(!ExpPoints(mesh, File_1_Path))
 	{
 		return 1;
 	}
 	
-	if(!ExpSegments(mesh, FilePath))
+	if(!ExpSegments(mesh, File_2_Path))
 	{
 		return 1;
 	}
 	
-	if(!ExpPolygons(mesh, FilePath))
+	if(!ExpPoints(mesh, File_8_Path))
 	{
 		return 1;
 	}
-
+	
+	if(!ExpSegments(mesh, File_9_Path))
+	{
+		return 1;
+	}
 	return 0;
 }
