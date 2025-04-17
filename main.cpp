@@ -8,10 +8,8 @@ int main()
 {
 	PolygonalMesh mesh;
 	string path = "/home/appuser/Data/Esercitazione_5_STL/PolygonalMesh";
-	string File_1_Path = "/home/appuser/Data/Esercitazione_5_STL/MioExport/Cell0Ds.inp";
-	string File_2_Path = "/home/appuser/Data/Esercitazione_5_STL/MioExport/Cell1Ds.inp";
-	string File_8_Path = "/home/appuser/Data/Esercitazione_5_STL/MioExport/Cell0Ds.txt";
-	string File_9_Path = "/home/appuser/Data/Esercitazione_5_STL/MioExport/Cell1Ds.txt";
+	string File_0D_Path = "/home/appuser/Data/Esercitazione_5_STL/MioExport/Cell0Ds.inp";
+	string File_1D_Path = "/home/appuser/Data/Esercitazione_5_STL/MioExport/Cell1Ds.inp";
 
 	if(!ImportMesh(path, mesh))
 	{
@@ -38,24 +36,17 @@ int main()
 		return 1;
 	}
 	
-	if(!ExpPoints(mesh, File_1_Path))
+	if(!ExpPoints(mesh, File_0D_Path))
 	{
 		return 1;
 	}
 	
-	if(!ExpSegments(mesh, File_2_Path))
+	if(!ExpSegments(mesh, File_1D_Path))
 	{
 		return 1;
 	}
 	
-	if(!ExpPoints(mesh, File_8_Path))
-	{
-		return 1;
-	}
+	cout << "Fatto tutto\n";
 	
-	if(!ExpSegments(mesh, File_9_Path))
-	{
-		return 1;
-	}
 	return 0;
 }
