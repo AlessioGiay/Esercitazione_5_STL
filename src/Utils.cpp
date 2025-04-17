@@ -365,7 +365,3 @@ bool ExpSegments(PolygonalMesh& mesh, const string& FilePath)
 	return true;
 }
 }
-
-
-
-// Aggiungere gli ID nel Export

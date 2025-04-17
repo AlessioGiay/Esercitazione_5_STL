@@ -238,7 +238,6 @@ void UCDUtilities::ExportUCDAscii(const Eigen::MatrixXd& points,
     // export points
     for (unsigned int p = 0; p < points.cols(); p++)
     {
-	    // MODIFICATO sep CON "\t"
         file<< (p + 1) <<sep;
         file<< std::scientific<< points(0, p)<< sep;
         file<< std::scientific<< points(1, p)<< sep;
@@ -248,7 +247,6 @@ void UCDUtilities::ExportUCDAscii(const Eigen::MatrixXd& points,
     // export cells
     for (unsigned int c = 0; c < cells.size(); c++)
     {
-	    // MODIFICATO sep CON "\t"
         file<< (c + 1) << sep;
         file<< std::scientific<< cells[c].MaterialId<< sep;
         file<< std::scientific<< cells[c].CellLabel(cells[c].Type);
