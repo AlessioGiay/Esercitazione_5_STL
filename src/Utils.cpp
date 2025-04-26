@@ -62,7 +62,7 @@ bool ImportCell0Ds(const string& path, PolygonalMesh& mesh)
     mesh.Cell0DsCoordinates.reserve(mesh.NumCell0Ds);
     mesh.Cell0DsID.reserve(mesh.NumCell0Ds);
     mesh.Cell0DsMarker.reserve(mesh.NumCell0Ds);
-    
+
     Vector2d Coordinates;
     char tmp;
     unsigned int Id;
@@ -188,7 +188,7 @@ bool CheckLength(PolygonalMesh& mesh)
 {
 	cout << "Si CL\n";
 	
-	for(size_t i = 0; i < mesh.Cell1DsID.size(); i++)
+	for(size_t i = 0; i < mesh.NumCell1Ds; i++)
 	{
 		double length = EdgeLength(
 		mesh.Cell0DsCoordinates[mesh.Cell1DsVertices[i][0]](0),		 // Prendo la x del primo vertice

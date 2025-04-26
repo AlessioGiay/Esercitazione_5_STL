@@ -30,9 +30,8 @@ struct PolygonalMesh
 	MatrixXd Points;
 	MatrixXi Segments;
 	
-	// const double epsilon = numeric_limits<double>::epsilon();
-	
-	const double epsilon = 1.0e-6;
+	const double epsilon = numeric_limits<double>::epsilon();
+
 };
 
 }
