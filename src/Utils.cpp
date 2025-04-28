@@ -148,7 +148,7 @@ bool ImportCell2Ds(const string& path, PolygonalMesh& mesh)
     mesh.Cell2DsVertices.reserve(mesh.NumCell2Ds);
     mesh.Cell2DsEdges.reserve(mesh.NumCell2Ds);
     mesh.Cell2DsID.reserve(mesh.NumCell2Ds);
-    mesh.Cell1DsMarker.reserve(mesh.NumCell1Ds);
+    mesh.Cell2DsMarker.reserve(mesh.NumCell2Ds);
     
     char tmp;
     unsigned int Id;
